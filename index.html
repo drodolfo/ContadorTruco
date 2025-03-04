@@ -200,7 +200,7 @@
             const game = {
                 nosotros: counters[0],
                 ellos: counters[1],
-                timestamp: new Date().toLocaleTimeString()
+                timestamp: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false })
             };
 
             gameHistory.push(game);
