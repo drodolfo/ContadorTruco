@@ -109,7 +109,9 @@
         .history-title {
             font-size: 1.2rem;
             color: #333;
+            margin-top: 20px;
             margin-bottom: 15px;
+            text-align: center;
         }
 
         .history-list {
@@ -132,9 +134,19 @@
             justify-content: space-between;
             margin-top: 15px;
             padding-top: 15px;
+            padding-bottom: 20px;
             border-top: 2px solid #eee;
+            border-bottom: 2px solid #eee;
             font-weight: bold;
             font-size: 2rem;
+        }
+
+        .resultado-title {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
 
         .highest-score {
@@ -215,6 +227,17 @@
         .close-button:active {
             transform: scale(0.95);
         }
+
+        .cafecito-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .cafecito-container img {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -246,20 +269,42 @@
     <button class="record-btn" onclick="recordGame()">Registrar Mano</button>
 
     <div class="history-container">
-        <div class="history-title">Historial de Manos</div>
-        <ul class="history-list" id="historyList"></ul>
+        <div class="resultado-title">Resultado</div>
         <div class="total-scores">
             <span>Nosotros: <span id="total1">0</span></span>
             <span>Ellos: <span id="total2">0</span></span>
         </div>
+        <div class="history-title">Historial de Manos</div>
+        <ul class="history-list" id="historyList"></ul>
     </div>
 
     <button class="reset-all-btn" onclick="resetAll()">Reiniciar Todo</button>
+
+    <div class="cafecito-container">
+        <a href='https://cafecito.app/diegomerclib' rel='noopener' target='_blank'>
+            <img srcset='https://cdn.cafecito.app/imgs/buttons/button_3.png 1x, https://cdn.cafecito.app/imgs/buttons/button_3_2x.png 2x, https://cdn.cafecito.app/imgs/buttons/button_3_3.75x.png 3.75x' src='https://cdn.cafecito.app/imgs/buttons/button_3.png' alt='Invitame un café en cafecito.app' />
+        </a>
+    </div>
 
     <script>
         let counters = [0, 0];
         let gameHistory = [];
         let totalScores = [0, 0];
+
+        // Load saved history when page loads
+        window.addEventListener('load', () => {
+            const savedHistory = localStorage.getItem('trucoHistory');
+            const savedScores = localStorage.getItem('trucoScores');
+            
+            if (savedHistory) {
+                gameHistory = JSON.parse(savedHistory);
+            }
+            if (savedScores) {
+                totalScores = JSON.parse(savedScores);
+            }
+            
+            updateHistory();
+        });
 
         function updateDisplay(counterId) {
             document.getElementById(`counter${counterId}`).textContent = counters[counterId - 1];
@@ -294,6 +339,10 @@
             gameHistory.push(game);
             totalScores[0] += counters[0];
             totalScores[1] += counters[1];
+
+            // Save to localStorage
+            localStorage.setItem('trucoHistory', JSON.stringify(gameHistory));
+            localStorage.setItem('trucoScores', JSON.stringify(totalScores));
 
             updateHistory();
             resetCounter(1);
@@ -358,6 +407,11 @@
             counters = [0, 0];
             gameHistory = [];
             totalScores = [0, 0];
+            
+            // Clear localStorage
+            localStorage.removeItem('trucoHistory');
+            localStorage.removeItem('trucoScores');
+            
             updateDisplay(1);
             updateDisplay(2);
             updateHistory();
