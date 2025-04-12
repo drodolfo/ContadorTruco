@@ -19,7 +19,7 @@
             flex-direction: column;
             padding: 20px;
             gap: 20px;
-            background-image: url('ancho.jpg');
+            background-image: url('./ancho.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -325,8 +325,15 @@
             updateHistory();
         });
 
+        function formatScore(score) {
+            if (score > 15) {
+                return `${score - 15} (Buenas)`;
+            }
+            return score.toString();
+        }
+
         function updateDisplay(counterId) {
-            document.getElementById(`counter${counterId}`).textContent = counters[counterId - 1];
+            document.getElementById(`counter${counterId}`).textContent = formatScore(counters[counterId - 1]);
         }
 
         function increaseCounter(counterId) {
@@ -384,7 +391,7 @@
                 li.className = 'history-item';
                 li.innerHTML = `
                     <span>Mano ${index + 1} (${game.timestamp})</span>
-                    <span>${game.nosotros} - ${game.ellos}</span>
+                    <span>${formatScore(game.nosotros)} - ${formatScore(game.ellos)}</span>
                 `;
                 historyList.appendChild(li);
             });
@@ -397,8 +404,8 @@
             total2Element.parentElement.classList.remove('highest-score', 'lowest-score');
 
             // Update scores
-            total1Element.textContent = totalScores[0];
-            total2Element.textContent = totalScores[1];
+            total1Element.textContent = formatScore(totalScores[0]);
+            total2Element.textContent = formatScore(totalScores[1]);
 
             // Apply highlighting
             if (totalScores[0] > totalScores[1]) {
